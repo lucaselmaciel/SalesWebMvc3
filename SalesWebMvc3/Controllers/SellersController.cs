@@ -18,5 +18,25 @@ namespace SalesWebMvc3.Controllers
             List<Seller> sellersList = _sellerService.FindAll();
             return View(sellersList);
         }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Seller seller)
+        {
+            DateTime dateTime = seller.BirthDate;
+            if (dateTime.Kind == DateTimeKind.Unspecified)
+            {
+                dateTime = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+            }
+            dateTime = dateTime.ToUniversalTime();
+            seller.BirthDate = dateTime;
+            _sellerService.Insert(seller);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
