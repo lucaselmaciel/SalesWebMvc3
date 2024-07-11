@@ -36,6 +36,12 @@ namespace SalesWebMvc3.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                List<Department> departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Departments= departments, Seller = seller };
+                return View(viewModel);
+            }
             DateTime dateTime = seller.BirthDate;
             if (dateTime.Kind == DateTimeKind.Unspecified)
             {
@@ -113,7 +119,13 @@ namespace SalesWebMvc3.Controllers
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
-            
+            if (!ModelState.IsValid)
+            {
+                List<Department> departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Departments = departments, Seller = seller };
+                return View(viewModel);
+            }
+
             try
             {
                 DateTime dateTime = seller.BirthDate;
