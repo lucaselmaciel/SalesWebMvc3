@@ -128,6 +128,10 @@ namespace SalesWebMvc3.Controllers
             {
                 return NotFound();
             }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
 
     }
